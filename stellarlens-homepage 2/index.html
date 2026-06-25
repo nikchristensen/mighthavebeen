@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StellarLens — What the world could be</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #fafafa; color: #1a1a1a; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #e5e5e5; margin-bottom: 28px; }
+  .logo { font-size: 20px; font-weight: 600; }
+  .logo span { color: #534AB7; }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; color: #555; }
+  .nav-links .current { color: #1a1a1a; font-weight: 600; }
+  .hero { display: flex; gap: 40px; align-items: center; padding: 16px 0 36px; }
+  .hero-text { flex: 1.4; }
+  .hero h1 { font-size: 28px; font-weight: 600; line-height: 1.3; margin-bottom: 10px; }
+  .hero p { font-size: 15px; color: #666; line-height: 1.5; }
+  .hero-search { flex: 1; }
+  .search-row { display: flex; flex-direction: column; gap: 10px; }
+  .search-row input { padding: 13px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
+  .search-row button { padding: 13px 22px; border: 1px solid #1a1a1a; border-radius: 8px; background: #1a1a1a; color: white; font-size: 15px; cursor: pointer; width: 100%; }
+  .section-label { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 14px; }
+  .filter-bar { position: relative; border: 1px solid #e5e5e5; border-radius: 12px; padding: 18px 20px; margin-bottom: 32px; background: white; overflow: hidden; }
+  .filter-bar canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.16; }
+  .filter-bar-content { position: relative; z-index: 1; }
+  .filter-bar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .filter-bar-title { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.06em; text-transform: uppercase; }
+  .filter-clear { font-size: 12px; color: #534AB7; cursor: pointer; font-weight: 600; }
+  .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .pill-group { display: inline-flex; gap: 6px; padding: 6px; border-radius: 14px; background: #ececec; }
+  .filter-row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 12px; color: #999; width: 76px; flex-shrink: 0; }
+  .pill { font-size: 13px; padding: 6px 13px; border-radius: 16px; border: 1px solid #ddd; background: white; cursor: pointer; white-space: nowrap; color: #555; }
+  .pill:hover { border-color: #bbb; }
+  .pill.active { border: 1.5px solid #534AB7; background: #EEEDFE; color: #3C3489; font-weight: 600; }
+  .filter-hint { font-size: 12px; color: #888; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+  .filter-hint b { color: #1a1a1a; }
+  .theme-grid { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 40px; }
+  .theme-tile { width: calc((100% - 32px) / 3); border: 1px solid #e5e5e5; border-radius: 12px; overflow: hidden; background: white; cursor: pointer; transition: box-shadow 0.15s, transform 0.15s; }
+  .theme-tile:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .tile-art { height: 150px; overflow: hidden; background: #111; }
+  .tile-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .tile-body { padding: 14px 16px; }
+  .tile-label { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .tile-count { font-size: 12px; color: #888; }
+  .teaser { display: flex; align-items: center; justify-content: space-between; border: 1px solid #e5e5e5; border-radius: 12px; padding: 18px 20px; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); margin-bottom: 40px; }
+  .teaser-text { font-size: 14px; color: #444; }
+  .teaser-text b { color: #1a1a1a; }
+  .teaser-link { font-size: 14px; font-weight: 600; color: #534AB7; white-space: nowrap; margin-left: 16px; text-decoration: none; }
+  footer { padding: 30px 0 50px; font-size: 12px; color: #999; border-top: 1px solid #e5e5e5; margin-top: 20px; }
+  .footer-newsletter { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-top: 1px solid #e5e5e5; margin-top: 8px; flex-wrap: wrap; gap: 12px; }
+  .footer-newsletter-text { font-size: 13px; color: #555; }
+  .footer-newsletter-text b { color: #1a1a1a; }
+  .footer-newsletter-form { display: flex; gap: 8px; }
+  .footer-newsletter-form input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 13px; width: 200px; }
+  .footer-newsletter-form button { padding: 8px 14px; border: 1px solid #1a1a1a; border-radius: 7px; background: white; color: #1a1a1a; font-size: 13px; cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">stellar<span>lens</span></a>
+    <div class="nav-links">
+      <span class="current">Browse</span>
+      <a href="guided-paths.html" style="color: inherit; text-decoration: none;">Guided paths</a>
+      <a href="newsletter.html" style="color: inherit; text-decoration: none;">Newsletter</a>
+      <span>About</span>
+    </div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-text">
+      <h1>What the world could be — organized around the questions that matter to you.</h1>
+      <p>Browse by theme and filter to find just the right book, or describe what's keeping you up at night and we'll do the rest.</p>
+    </div>
+    <div class="hero-search">
+      <div class="search-row">
+        <input type="text" id="mind-input" placeholder="What's on your mind?">
+        <button>Find a book</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <canvas id="filter-canvas"></canvas>
+    <div class="filter-bar-content">
+    <div class="filter-bar-top">
+      <div class="filter-bar-title">Filter by feel — no theme required</div>
+      <div class="filter-clear" onclick="clearFilters()">Clear</div>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Challenge</div>
+      <span class="pill-group"><div class="pill" data-group="challenge" onclick="toggle(this)">Easy read</div>
+      <div class="pill" data-group="challenge" onclick="toggle(this)">Moderate</div>
+      <div class="pill" data-group="challenge" onclick="toggle(this)">Demanding</div></span>
+    </div>
+    <div class="filter-row">
+      <div class="row-label">Mood</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Uplifting</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Bittersweet</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Bleak</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Tense</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Awe-filled</div>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Era</div>
+      <span class="pill-group"><div class="pill" data-group="era" onclick="toggle(this)">Golden age</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">New wave</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">Modern</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">New release</div></span>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Format</div>
+      <span class="pill-group"><div class="pill" data-group="format" onclick="toggle(this)">Novel</div>
+      <div class="pill" data-group="format" onclick="toggle(this)">Novella</div>
+      <div class="pill" data-group="format" onclick="toggle(this)">Short story</div></span>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Audience</div>
+      <span class="pill-group"><div class="pill" data-group="audience" onclick="toggle(this)">YA-friendly</div>
+      <div class="pill" data-group="audience" onclick="toggle(this)">Adult</div></span>
+    </div>
+    <div class="filter-hint" id="filter-hint">Pick a feel first, or browse by theme below — they work together.</div>
+    </div>
+  </div>
+
+  <div class="section-label">Browse by theme</div>
+  <div class="theme-grid">
+
+    <div class="theme-tile" onclick="goToTheme('theme-ai.html')">
+      <div class="tile-art"><img src="images/ai.jpg" alt="AI & consciousness"></div>
+      <div class="tile-body">
+        <div class="tile-label">AI & consciousness</div>
+        <div class="tile-count">24 works</div>
+      </div>
+    </div>
+
+    <div class="theme-tile">
+      <div class="tile-art"><img src="images/env.jpg" alt="Environment"></div>
+      <div class="tile-body">
+        <div class="tile-label">Environment</div>
+        <div class="tile-count">19 works</div>
+      </div>
+    </div>
+
+    <div class="theme-tile">
+      <div class="tile-art"><img src="images/love.jpg" alt="Love"></div>
+      <div class="tile-body">
+        <div class="tile-label">Love</div>
+        <div class="tile-count">17 works</div>
+      </div>
+    </div>
+
+    <div class="theme-tile">
+      <div class="tile-art"><img src="images/power.jpg" alt="Power"></div>
+      <div class="tile-body">
+        <div class="tile-label">Power</div>
+        <div class="tile-count">22 works</div>
+      </div>
+    </div>
+
+    <div class="theme-tile">
+      <div class="tile-art"><img src="images/utopias.jpg" alt="Utopias / dystopias"></div>
+      <div class="tile-body">
+        <div class="tile-label">Utopias / dystopias</div>
+        <div class="tile-count">20 works</div>
+      </div>
+    </div>
+
+    <div class="theme-tile">
+      <div class="tile-art"><img src="images/empire.jpg" alt="Empire"></div>
+      <div class="tile-body">
+        <div class="tile-label">Empire</div>
+        <div class="tile-count">15 works</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="teaser">
+    <div class="teaser-text">Not sure where to start? <b>Try a guided path</b> — three books, one theme, a deliberate order.</div>
+    <a href="guided-paths.html" class="teaser-link">Explore guided paths →</a>
+  </div>
+
+  <div class="footer-newsletter">
+    <div class="footer-newsletter-text">Want new guided paths in your inbox? <b>Join the newsletter.</b></div>
+    <div class="footer-newsletter-form">
+      <input type="email" placeholder="you@example.com">
+      <button>Subscribe</button>
+    </div>
+  </div>
+
+  <footer>StellarLens MVP wireframe — six locked launch themes, real illustrated artwork, static HTML preview.</footer>
+
+</div>
+
+<script>
+const SINGLE_SELECT_GROUPS = ['challenge', 'era', 'format', 'audience'];
+
+function toggle(el) {
+  const group = el.dataset.group;
+  const wasActive = el.classList.contains('active');
+
+  if (group && SINGLE_SELECT_GROUPS.includes(group)) {
+    document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('active'));
+    if (!wasActive) el.classList.add('active');
+  } else {
+    el.classList.toggle('active');
+  }
+  updateHint();
+}
+
+function clearFilters() {
+  document.querySelectorAll('.pill.active').forEach(p => p.classList.remove('active'));
+  updateHint();
+}
+
+function goToTheme(url) {
+  const active = Array.from(document.querySelectorAll('.pill.active')).map(p => p.textContent);
+  const query = active.length ? '?filters=' + encodeURIComponent(active.join(',')) : '';
+  window.location.href = url + query;
+}
+
+function updateHint() {
+  const active = Array.from(document.querySelectorAll('.pill.active')).map(p => p.textContent);
+  const hint = document.getElementById('filter-hint');
+  if (active.length === 0) {
+    hint.innerHTML = 'Pick a feel first, or browse by theme below — they work together.';
+  } else {
+    hint.innerHTML = 'Showing works that are <b>' + active.join('</b>, <b>') + '</b> — pick a theme below to narrow further, or browse all matches.';
+  }
+}
+
+const canvas = document.getElementById('filter-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, flies = [], mottle = [];
+
+function spawnMottle() {
+  mottle = [];
+  const tones = ['28,26,32', '16,15,18', '32,30,36'];
+  for (let i = 0; i < 7; i++) {
+    mottle.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: 80 + Math.random() * 140,
+      alpha: 0.3 + Math.random() * 0.25,
+      tone: tones[Math.floor(Math.random() * tones.length)]
+    });
+  }
+}
+
+function resize() {
+  W = canvas.offsetWidth || canvas.parentElement.offsetWidth;
+  H = canvas.offsetHeight || canvas.parentElement.offsetHeight;
+  canvas.width = W;
+  canvas.height = H;
+}
+
+function spawnFlies() {
+  flies = [];
+  for (let i = 0; i < 45; i++) {
+    flies.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.6,
+      vy: (Math.random() - 0.5) * 0.6,
+      r: 1.2 + Math.random() * 1.8,
+      glowPhase: Math.random() * Math.PI * 2,
+      glowSpeed: 0.02 + Math.random() * 0.03,
+      turnTimer: Math.random() * 60
+    });
+  }
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, 'rgb(10,10,12)');
+  grad.addColorStop(1, 'rgb(20,19,23)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  for (const m of mottle) {
+    const mg = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, m.r);
+    mg.addColorStop(0, 'rgba(' + m.tone + ',' + m.alpha + ')');
+    mg.addColorStop(1, 'rgba(' + m.tone + ',0)');
+    ctx.fillStyle = mg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  for (const f of flies) {
+    f.turnTimer -= 1;
+    if (f.turnTimer <= 0) {
+      f.vx += (Math.random() - 0.5) * 0.4;
+      f.vy += (Math.random() - 0.5) * 0.4;
+      const speed = Math.hypot(f.vx, f.vy);
+      const maxSpeed = 0.9;
+      if (speed > maxSpeed) { f.vx = (f.vx / speed) * maxSpeed; f.vy = (f.vy / speed) * maxSpeed; }
+      f.turnTimer = 30 + Math.random() * 60;
+    }
+    f.x += f.vx;
+    f.y += f.vy;
+    if (f.x < 0) f.x += W; if (f.x > W) f.x -= W;
+    if (f.y < 0) f.y += H; if (f.y > H) f.y -= H;
+
+    f.glowPhase += f.glowSpeed;
+    const glow = (Math.sin(f.glowPhase) + 1) / 2;
+    const alpha = 0.15 + glow * 0.75;
+
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r * (1 + glow * 0.8), 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + (alpha * 0.35).toFixed(2) + ')';
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(f.x, f.y, f.r * 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255,255,255,' + alpha.toFixed(2) + ')';
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+
+function initCanvas() {
+  resize();
+  spawnMottle();
+  spawnFlies();
+  draw();
+}
+
+if (document.readyState === 'complete') {
+  initCanvas();
+} else {
+  window.addEventListener('load', initCanvas);
+}
+window.addEventListener('resize', () => { resize(); });
+</script>
+
+</body>
+</html>

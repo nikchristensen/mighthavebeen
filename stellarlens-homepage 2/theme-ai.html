@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StellarLens — AI & consciousness</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #fafafa; color: #1a1a1a; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #e5e5e5; margin-bottom: 28px; }
+  .logo { font-size: 20px; font-weight: 600; }
+  .logo span { color: #534AB7; }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; color: #555; }
+  .nav-links .current { color: #1a1a1a; font-weight: 600; }
+
+  .crumb { font-size: 13px; color: #888; margin-bottom: 16px; }
+  .crumb a { color: #534AB7; text-decoration: none; font-weight: 600; }
+  .crumb b { color: #1a1a1a; }
+
+  .theme-header { position: relative; border-radius: 14px; overflow: hidden; height: 200px; margin-bottom: 20px; }
+  .theme-header img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .theme-header-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px 28px; background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0) 70%); }
+  .theme-header-title { font-size: 26px; font-weight: 600; color: white; }
+  .theme-header-count { font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 4px; }
+
+  .theme-desc { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 24px; max-width: 640px; }
+
+  /* Direction picker — now PRIMARY, shown first */
+  .direction-bar { border: 1px solid #e5e5e5; border-radius: 12px; padding: 18px 20px; margin-bottom: 16px; background: white; }
+  .direction-bar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .direction-bar-title { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.06em; text-transform: uppercase; }
+  .direction-bar-sub { font-size: 12px; color: #aaa; }
+  .direction-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .direction-pill { font-size: 13px; padding: 6px 13px; border-radius: 16px; border: 1px solid #ddd; background: white; cursor: pointer; white-space: nowrap; color: #555; }
+  .direction-pill:hover { border-color: #bbb; }
+  .direction-pill.active { border: 1.5px solid #1D9E75; background: #E1F5EE; color: #085041; font-weight: 600; }
+
+  /* Universal filter bar — now SECONDARY, shown second, visually quieter */
+  .filter-bar { border: 1px solid #eee; border-radius: 12px; padding: 14px 20px; margin-bottom: 28px; background: #fcfcfc; }
+  .filter-bar-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .filter-bar-title { font-size: 11px; font-weight: 600; color: #aaa; letter-spacing: 0.06em; text-transform: uppercase; }
+  .filter-clear { font-size: 11px; color: #999; cursor: pointer; font-weight: 600; }
+  .filter-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .pill-group { display: inline-flex; gap: 6px; padding: 6px; border-radius: 14px; background: #ececec; }
+  .filter-row:last-child { margin-bottom: 0; }
+  .row-label { font-size: 11px; color: #bbb; width: 70px; flex-shrink: 0; }
+  .pill { font-size: 12px; padding: 5px 11px; border-radius: 14px; border: 1px solid #e8e8e8; background: white; cursor: pointer; white-space: nowrap; color: #777; }
+  .pill:hover { border-color: #ccc; }
+  .pill.active { border: 1.5px solid #534AB7; background: #EEEDFE; color: #3C3489; font-weight: 600; }
+  .carry-note { font-size: 11px; color: #888; margin-top: 10px; padding-top: 10px; border-top: 1px solid #f0f0f0; }
+  .carry-note b { color: #3C3489; }
+
+  .results-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 14px; }
+  .results-title { font-size: 16px; font-weight: 600; }
+  .results-count { font-size: 13px; color: #888; }
+
+  .book-list { display: flex; flex-direction: column; gap: 10px; }
+  .book-card { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: start; padding: 14px 16px; border: 1px solid #e5e5e5; border-radius: 12px; background: white; cursor: pointer; }
+  .book-card:hover { border-color: #ccc; }
+  .book-cover { width: 56px; height: 78px; border-radius: 5px; background: #ddd; object-fit: cover; display: block; }
+  .book-title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .book-author { font-size: 12px; color: #888; margin-bottom: 6px; }
+  .book-why { font-size: 12px; color: #666; line-height: 1.5; font-style: italic; }
+  .rank-badge { font-size: 11px; color: #aaa; white-space: nowrap; }
+
+  footer { padding: 30px 0 50px; font-size: 12px; color: #999; border-top: 1px solid #e5e5e5; margin-top: 20px; }
+  .footer-newsletter { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-top: 1px solid #e5e5e5; margin-top: 8px; flex-wrap: wrap; gap: 12px; }
+  .footer-newsletter-text { font-size: 13px; color: #555; }
+  .footer-newsletter-text b { color: #1a1a1a; }
+  .footer-newsletter-form { display: flex; gap: 8px; }
+  .footer-newsletter-form input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 13px; width: 200px; }
+  .footer-newsletter-form button { padding: 8px 14px; border: 1px solid #1a1a1a; border-radius: 7px; background: white; color: #1a1a1a; font-size: 13px; cursor: pointer; font-weight: 600; }
+
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 10; }
+  .modal-overlay.open { display: flex; }
+  .modal-card { background: white; border-radius: 14px; padding: 22px; max-width: 380px; width: 90%; }
+  .modal-head { display: grid; grid-template-columns: 50px 1fr; gap: 12px; margin-bottom: 16px; }
+  .modal-cover { width: 50px; height: 70px; border-radius: 5px; background: #ddd; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .modal-author { font-size: 12px; color: #888; }
+  .retailer-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .retailer-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px; border: 1px solid #e5e5e5; margin-bottom: 8px; cursor: pointer; }
+  .retailer-option.primary { border: 2px solid #185FA5; }
+  .retailer-option:hover { background: #fafafa; }
+  .retailer-name { font-size: 14px; font-weight: 600; }
+  .retailer-sub { font-size: 12px; color: #888; }
+  .badge { font-size: 10px; padding: 3px 9px; border-radius: 12px; background: #E6F1FB; color: #0C447C; font-weight: 600; }
+  .disclosure { font-size: 11px; color: #aaa; line-height: 1.5; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+  .modal-close { text-align: center; margin-top: 14px; font-size: 13px; color: #888; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">stellar<span>lens</span></a>
+    <div class="nav-links">
+      <a href="index.html" style="color: inherit; text-decoration: none;">Browse</a>
+      <a href="guided-paths.html" style="color: inherit; text-decoration: none;">Guided paths</a>
+      <a href="newsletter.html" style="color: inherit; text-decoration: none;">Newsletter</a>
+      <span>About</span>
+    </div>
+  </div>
+
+  <div class="crumb"><a href="index.html">Browse</a> / <b>AI & consciousness</b></div>
+
+  <div class="theme-header">
+    <img src="images/ai.jpg" alt="AI & consciousness">
+    <div class="theme-header-overlay">
+      <div class="theme-header-title">AI & consciousness</div>
+      <div class="theme-header-count">24 works</div>
+    </div>
+  </div>
+
+  <div class="theme-desc">How might minds that aren't human think, feel, and act? These books explore machine consciousness, algorithmic power, and what it means to create something smarter than yourself.</div>
+
+  <div class="direction-bar">
+    <div class="direction-bar-top">
+      <div class="direction-bar-title">Narrow by direction</div>
+      <div class="direction-bar-sub">Specific to AI & consciousness</div>
+    </div>
+    <div class="direction-row">
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Ethics</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Consciousness</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Labor & automation</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Companionship</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Rebellion</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Control</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Personhood</div>
+      <div class="direction-pill" data-group="direction" onclick="toggle(this)">Machine desire</div>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-bar-top">
+      <div class="filter-bar-title">Filter by feel</div>
+      <div class="filter-clear" onclick="clearFilters()">Clear</div>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Challenge</div>
+      <span class="pill-group"><div class="pill" data-group="challenge" onclick="toggle(this)">Easy read</div>
+      <div class="pill" data-group="challenge" onclick="toggle(this)">Moderate</div>
+      <div class="pill" data-group="challenge" onclick="toggle(this)">Demanding</div></span>
+    </div>
+    <div class="filter-row">
+      <div class="row-label">Mood</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Uplifting</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Bittersweet</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Bleak</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Tense</div>
+      <div class="pill" data-group="mood" onclick="toggle(this)">Awe-filled</div>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Era</div>
+      <span class="pill-group"><div class="pill" data-group="era" onclick="toggle(this)">Golden age</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">New wave</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">Modern</div>
+      <div class="pill" data-group="era" onclick="toggle(this)">New release</div></span>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Format</div>
+      <span class="pill-group"><div class="pill" data-group="format" onclick="toggle(this)">Novel</div>
+      <div class="pill" data-group="format" onclick="toggle(this)">Novella</div>
+      <div class="pill" data-group="format" onclick="toggle(this)">Short story</div></span>
+    </div>
+    <div class="filter-row single-select">
+      <div class="row-label">Audience</div>
+      <span class="pill-group"><div class="pill" data-group="audience" onclick="toggle(this)">YA-friendly</div>
+      <div class="pill" data-group="audience" onclick="toggle(this)">Adult</div></span>
+    </div>
+    <div class="carry-note" id="carry-note" style="display:none;"></div>
+  </div>
+
+  <div class="results-header">
+    <div class="results-title">AI & consciousness</div>
+    <div class="results-count">24 works · showing top 4</div>
+  </div>
+
+  <div class="book-list" id="book-list"></div>
+
+  <footer>StellarLens MVP wireframe — direction shown first, universal filters second, carrying over any selections made on the homepage.</footer>
+
+</div>
+
+<div class="modal-overlay" id="book-modal">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div class="modal-cover"></div>
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-author" id="modal-author"></div>
+      </div>
+    </div>
+    <div class="retailer-label">Choose where to buy</div>
+    <div class="retailer-option primary">
+      <div>
+        <div class="retailer-name">Bookshop.org</div>
+        <div class="retailer-sub">Supports independent bookstores</div>
+      </div>
+      <span class="badge">Recommended</span>
+    </div>
+    <div class="retailer-option">
+      <div>
+        <div class="retailer-name">Amazon</div>
+        <div class="retailer-sub">Wider stock, faster shipping</div>
+      </div>
+    </div>
+    <div class="disclosure">As an affiliate, StellarLens may earn a commission from qualifying purchases made through these links, at no extra cost to you.</div>
+    <div class="modal-close" onclick="closeBookModal()">Close</div>
+  </div>
+</div>
+
+<script>
+const SINGLE_SELECT_GROUPS = ['challenge', 'era', 'format', 'audience'];
+
+function toggle(el) {
+  const group = el.dataset.group;
+  const wasActive = el.classList.contains('active');
+
+  if (group && SINGLE_SELECT_GROUPS.includes(group)) {
+    // Single-select: clicking a pill clears its siblings in the same group first
+    document.querySelectorAll(`.pill[data-group="${group}"]`).forEach(p => p.classList.remove('active'));
+    if (!wasActive) el.classList.add('active');
+  } else {
+    // Multi-select: mood, and direction pills (no data-group restriction applied)
+    el.classList.toggle('active');
+  }
+}
+function clearFilters() {
+  document.querySelectorAll('.filter-bar .pill.active').forEach(p => p.classList.remove('active'));
+}
+
+function openBookModal(title, author) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-author').textContent = author;
+  document.getElementById('book-modal').classList.add('open');
+}
+function closeBookModal() {
+  document.getElementById('book-modal').classList.remove('open');
+}
+
+function applyCarriedFilters() {
+  const params = new URLSearchParams(window.location.search);
+  const carried = params.get('filters');
+  if (!carried) return;
+  const labels = carried.split(',').filter(Boolean);
+  if (labels.length === 0) return;
+
+  let matched = [];
+  document.querySelectorAll('.filter-bar .pill').forEach(pill => {
+    if (labels.includes(pill.textContent)) {
+      pill.classList.add('active');
+      matched.push(pill.textContent);
+    }
+  });
+
+  if (matched.length > 0) {
+    const note = document.getElementById('carry-note');
+    note.style.display = 'block';
+    note.innerHTML = 'Carried over from your search: <b>' + matched.join('</b>, <b>') + '</b>';
+  }
+}
+applyCarriedFilters();
+</script>
+
+
+<script>
+const BOOKS = [{"title": "Klara and the Sun", "author": "Kazuo Ishiguro", "year": 2021, "isbn": "9780593318171", "rank": 1, "why": "The most tender, humane entry point into AI consciousness on the list.", "directions": ["Companionship", "Personhood"], "challenge": "Moderate", "mood": "Bittersweet", "era": "New release", "format": "Novel", "audience": "YA-friendly"}, {"title": "Do Androids Dream of Electric Sheep?", "author": "Philip K. Dick", "year": 1968, "isbn": "9780345404473", "rank": 2, "why": "The original question, still unresolved: what separates empathy from its simulation.", "directions": ["Ethics", "Personhood"], "challenge": "Moderate", "mood": "Bleak", "era": "Golden age", "format": "Novel", "audience": "Adult"}, {"title": "Blindsight", "author": "Peter Watts", "year": 2006, "isbn": "9780765312181", "rank": 3, "why": "A ruthlessly hard-SF argument that consciousness may be an evolutionary mistake.", "directions": ["Consciousness", "Control"], "challenge": "Demanding", "mood": "Bleak", "era": "Modern", "format": "Novel", "audience": "Adult"}, {"title": "Ancillary Justice", "author": "Ann Leckie", "year": 2013, "isbn": "9780316246620", "rank": 4, "why": "A former starship AI seeks identity and justice across an empire.", "directions": ["Personhood", "Rebellion"], "challenge": "Moderate", "mood": "Tense", "era": "Modern", "format": "Novel", "audience": "Adult"}, {"title": "I, Robot", "author": "Isaac Asimov", "year": 1950, "isbn": "9780553294385", "rank": 5, "why": "The original ethical framework for machine behavior, still widely referenced.", "directions": ["Ethics", "Control"], "challenge": "Easy read", "mood": "Uplifting", "era": "Golden age", "format": "Short story", "audience": "YA-friendly"}, {"title": "Machines Like Me", "author": "Ian McEwan", "year": 2019, "isbn": "9780385545112", "rank": 6, "why": "A literary novelist's take on synthetic companionship and moral responsibility.", "directions": ["Ethics", "Companionship"], "challenge": "Moderate", "mood": "Bittersweet", "era": "New release", "format": "Novel", "audience": "Adult"}];
+
+function renderBooks() {
+  const activeFilters = Array.from(document.querySelectorAll('.filter-bar .pill.active')).map(p => p.textContent.trim());
+  const activeDirections = Array.from(document.querySelectorAll('.direction-pill.active')).map(p => p.textContent.trim());
+
+  const filtered = BOOKS.filter(b => {
+    const bookAttrs = [b.challenge, b.mood, b.era, b.format, b.audience];
+    const filtersOk = activeFilters.length === 0 || activeFilters.every(f => bookAttrs.includes(f));
+    const directionsOk = activeDirections.length === 0 || activeDirections.some(d => b.directions.includes(d));
+    return filtersOk && directionsOk;
+  });
+
+  const list = document.getElementById('book-list');
+  if (filtered.length === 0) {
+    list.innerHTML = '<div style="padding:30px 0;text-align:center;color:#999;font-size:13px;">No exact matches in this theme yet — try clearing a filter or direction.</div>';
+  } else {
+    list.innerHTML = filtered.map(b => `
+      <div class="book-card" onclick="openBookModal('${b.title.replace(/'/g, "\\'")}', '${b.author} · ${b.year}')">
+        <img class="book-cover" src="https://covers.openlibrary.org/b/isbn/${b.isbn}-M.jpg" alt="${b.title} cover">
+        <div>
+          <div class="book-title">${b.title}</div>
+          <div class="book-author">${b.author} · ${b.year}</div>
+          <div class="book-why">${b.why}</div>
+        </div>
+        <div class="rank-badge">#${b.rank} pick</div>
+      </div>
+    `).join('');
+  }
+
+  document.querySelector('.results-count').textContent = filtered.length + ' of ' + BOOKS.length + ' shown';
+}
+
+// Hook renderBooks into the existing toggle() function without breaking it
+const _originalToggle = toggle;
+toggle = function(el) {
+  _originalToggle(el);
+  renderBooks();
+};
+
+renderBooks();
+</script>
+</body>
+</html>

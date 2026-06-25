@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StellarLens — AI through a hopeful lens</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #fafafa; color: #1a1a1a; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #e5e5e5; margin-bottom: 28px; }
+  .logo { font-size: 20px; font-weight: 600; }
+  .logo span { color: #534AB7; }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; color: #555; }
+  .nav-links a { color: inherit; text-decoration: none; }
+
+  .crumb { font-size: 13px; color: #888; margin-bottom: 20px; }
+  .crumb a { color: #534AB7; text-decoration: none; font-weight: 600; }
+  .crumb b { color: #1a1a1a; }
+
+  .article-meta { font-size: 12px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .article-title { font-size: 30px; font-weight: 600; line-height: 1.25; margin-bottom: 14px; }
+  .article-intro { font-size: 15px; color: #444; line-height: 1.7; margin-bottom: 28px; }
+  .article-intro p { margin-bottom: 14px; }
+
+  .bundle-bar { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e5e5e5; border-radius: 12px; padding: 14px 18px; background: white; margin-bottom: 36px; }
+  .bundle-text { font-size: 13px; color: #555; }
+  .bundle-text b { color: #1a1a1a; }
+  .bundle-buy { font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 10px; border: 1.5px solid #1D9E75; background: #E1F5EE; color: #085041; cursor: pointer; white-space: nowrap; }
+  .bundle-buy:hover { background: #cdeee0; }
+
+  .book-entry { margin-bottom: 36px; }
+  .book-entry-top { display: flex; gap: 16px; margin-bottom: 12px; }
+  .book-entry-top .book-cover { flex-shrink: 0; }
+  .book-step { font-size: 12px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+  .book-cover { width: 70px; height: 98px; border-radius: 6px; background: #ddd; object-fit: cover; display: block; }
+  .book-title { font-size: 18px; font-weight: 600; margin-bottom: 2px; }
+  .book-author { font-size: 13px; color: #888; margin-bottom: 10px; }
+  .book-buy { font-size: 12px; font-weight: 600; padding: 6px 13px; border-radius: 8px; border: 1px solid #ddd; background: white; color: #444; cursor: pointer; display: inline-block; }
+  .book-buy:hover { border-color: #bbb; background: #fafafa; }
+  .book-review { font-size: 14px; color: #444; line-height: 1.7; }
+  .book-review p { margin-bottom: 10px; }
+
+  .why-order { border-left: 3px solid #534AB7; padding: 2px 0 2px 16px; margin: 28px 0 36px; }
+  .why-order-label { font-size: 11px; font-weight: 600; color: #534AB7; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .why-order p { font-size: 14px; color: #555; line-height: 1.65; }
+
+  .newsletter-inline { border: 1px solid #e5e5e5; border-radius: 14px; padding: 22px 24px; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); margin: 40px 0; }
+  .newsletter-inline h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .newsletter-inline p { font-size: 13px; color: #555; margin-bottom: 14px; max-width: 480px; line-height: 1.5; }
+  .newsletter-row { display: flex; gap: 10px; }
+  .newsletter-row input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+  .newsletter-row button { padding: 10px 18px; border: 1px solid #1a1a1a; border-radius: 8px; background: #1a1a1a; color: white; font-size: 14px; cursor: pointer; white-space: nowrap; }
+
+  footer { padding: 24px 0 16px; font-size: 12px; color: #999; border-top: 1px solid #e5e5e5; margin-top: 8px; }
+
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 10; }
+  .modal-overlay.open { display: flex; }
+  .modal-card { background: white; border-radius: 14px; padding: 22px; max-width: 400px; width: 90%; }
+  .modal-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .modal-sub { font-size: 12px; color: #888; margin-bottom: 16px; }
+  .modal-book-row { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 13px; color: #444; }
+  .modal-book-row .mini-cover { width: 24px; height: 34px; border-radius: 3px; background: #ddd; flex-shrink: 0; object-fit: cover; display: block; }
+  .modal-divider { border-top: 1px solid #f0f0f0; margin: 14px 0; }
+  .retailer-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+  .retailer-option { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-radius: 10px; border: 1px solid #e5e5e5; margin-bottom: 8px; cursor: pointer; }
+  .retailer-option.primary { border: 2px solid #185FA5; }
+  .retailer-option:hover { background: #fafafa; }
+  .retailer-name { font-size: 14px; font-weight: 600; }
+  .retailer-sub { font-size: 12px; color: #888; }
+  .badge { font-size: 10px; padding: 3px 9px; border-radius: 12px; background: #E6F1FB; color: #0C447C; font-weight: 600; }
+  .price-line { display: flex; justify-content: space-between; align-items: baseline; margin: 4px 0 14px; }
+  .price-label { font-size: 13px; color: #666; }
+  .price-value { font-size: 20px; font-weight: 600; }
+  .disclosure { font-size: 11px; color: #aaa; line-height: 1.5; margin-top: 14px; padding-top: 12px; border-top: 1px solid #f0f0f0; }
+  .modal-close { text-align: center; margin-top: 14px; font-size: 13px; color: #888; cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">stellar<span>lens</span></a>
+    <div class="nav-links">
+      <a href="index.html">Browse</a>
+      <a href="guided-paths.html">Guided paths</a>
+      <a href="newsletter.html">Newsletter</a>
+    </div>
+  </div>
+
+  <div class="crumb"><a href="guided-paths.html">Guided paths</a> / <b>AI through a hopeful lens</b></div>
+
+  <div class="article-meta">AI & consciousness · 3 books · easy → moderate</div>
+  <div class="article-title">AI through a hopeful lens</div>
+
+  <div class="article-intro">
+    <p>Most "AI in fiction" lists default to dread — rogue systems, replaced jobs, the usual. This path goes the other way. These three books treat artificial minds as something worth taking seriously as companions, not just threats, without ever turning saccharine about it.</p>
+    <p>Read in this order, each book raises the emotional and intellectual stakes a little further, while keeping the same underlying warmth.</p>
+  </div>
+
+  <div class="bundle-bar">
+    <div class="bundle-text">Want all three? <b>$41.97 combined</b>, one cart.</div>
+    <div class="bundle-buy" onclick="openPathModal()">Buy this path</div>
+  </div>
+
+  <div class="book-entry">
+    <div class="book-entry-top">
+      <img class="book-cover" src="https://covers.openlibrary.org/b/isbn/9780062569400-M.jpg" alt="A Closed and Common Orbit cover">
+      <div>
+        <div class="book-step">Step 1 of 3 — start here</div>
+        <div class="book-title">A Closed and Common Orbit</div>
+        <div class="book-author">Becky Chambers · 2016</div>
+      </div>
+    </div>
+    <div class="book-review">
+      <p>This is the gentlest possible entry point. Chambers writes a newly embodied AI learning to be a person — not as a thought experiment, but as a coming-of-age story with all the awkwardness and tenderness that implies. Nothing here is trying to unsettle you.</p>
+      <p>If you've ever wondered what it would actually feel like, moment to moment, to wake up with a mind but no history, this is the most humane possible answer.</p>
+    </div>
+    <button class="book-buy" onclick="openBookModal('A Closed and Common Orbit', 'Becky Chambers · 2016')">Buy this book</button>
+  </div>
+
+  <div class="book-entry">
+    <div class="book-entry-top">
+      <img class="book-cover" src="https://covers.openlibrary.org/b/isbn/9780593318171-M.jpg" alt="Klara and the Sun cover">
+      <div>
+        <div class="book-step">Step 2 of 3</div>
+        <div class="book-title">Klara and the Sun</div>
+        <div class="book-author">Kazuo Ishiguro · 2021</div>
+      </div>
+    </div>
+    <div class="book-review">
+      <p>A quieter, more literary register than book one, but the same emotional core: devotion that asks nothing in return. Ishiguro never confirms whether Klara's inner life is "real," and the book is more moving for refusing to answer.</p>
+      <p>This is where the path stops being comfortable and starts being genuinely affecting — grief shows up here in a way it doesn't in step one.</p>
+    </div>
+    <button class="book-buy" onclick="openBookModal('Klara and the Sun', 'Kazuo Ishiguro · 2021')">Buy this book</button>
+  </div>
+
+  <div class="book-entry">
+    <div class="book-entry-top">
+      <img class="book-cover" src="https://covers.openlibrary.org/b/isbn/9780316246620-M.jpg" alt="Ancillary Justice cover">
+      <div>
+        <div class="book-step">Step 3 of 3 — finish here</div>
+        <div class="book-title">Ancillary Justice</div>
+        <div class="book-author">Ann Leckie · 2013</div>
+      </div>
+    </div>
+    <div class="book-review">
+      <p>The same warmth from steps one and two, now with empire-scale consequences. A fragment of a once-vast AI seeks justice for a betrayal — and the book asks what loyalty and selfhood mean when you used to be hundreds of bodies at once.</p>
+      <p>It's the most demanding read of the three, but it earns that difficulty. This is what the hope from book one looks like under real pressure.</p>
+    </div>
+    <button class="book-buy" onclick="openBookModal('Ancillary Justice', 'Ann Leckie · 2013')">Buy this book</button>
+  </div>
+
+  <div class="why-order">
+    <div class="why-order-label">Why this order</div>
+    <p>Each book raises the stakes without breaking the emotional thread that connects them. Starting with Leckie's empire-scale politics would be a shock; starting with Chambers and ending there means the political weight actually lands.</p>
+  </div>
+
+  <div class="newsletter-inline">
+    <h3>Liked this path?</h3>
+    <p>Get one new guided path a month, straight to your inbox — no spam, no fifty-book listicles.</p>
+    <div class="newsletter-row">
+      <input type="email" placeholder="you@example.com">
+      <button>Subscribe</button>
+    </div>
+  </div>
+
+  <footer>StellarLens MVP wireframe — guided path detail page, blog-style, with individual and bundle buy options plus an end-of-article newsletter prompt.</footer>
+
+</div>
+
+<div class="modal-overlay" id="book-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-author"></div>
+    <div class="retailer-label">Choose where to buy</div>
+    <div class="retailer-option primary">
+      <div>
+        <div class="retailer-name">Bookshop.org</div>
+        <div class="retailer-sub">Supports independent bookstores</div>
+      </div>
+      <span class="badge">Recommended</span>
+    </div>
+    <div class="retailer-option">
+      <div>
+        <div class="retailer-name">Amazon</div>
+        <div class="retailer-sub">Wider stock, faster shipping</div>
+      </div>
+    </div>
+    <div class="disclosure">As an affiliate, StellarLens may earn a commission from qualifying purchases made through these links, at no extra cost to you.</div>
+    <div class="modal-close" onclick="closeBookModal()">Close</div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="path-modal">
+  <div class="modal-card">
+    <div class="modal-title">Buy the whole path</div>
+    <div class="modal-sub">AI through a hopeful lens — 3 books</div>
+    <div class="modal-book-row"><img class="mini-cover" src="https://covers.openlibrary.org/b/isbn/9780062569400-S.jpg" alt="">A Closed and Common Orbit</div>
+    <div class="modal-book-row"><img class="mini-cover" src="https://covers.openlibrary.org/b/isbn/9780593318171-S.jpg" alt="">Klara and the Sun</div>
+    <div class="modal-book-row"><img class="mini-cover" src="https://covers.openlibrary.org/b/isbn/9780316246620-S.jpg" alt="">Ancillary Justice</div>
+    <div class="modal-divider"></div>
+    <div class="price-line">
+      <span class="price-label">3 books, combined</span>
+      <span class="price-value">$41.97</span>
+    </div>
+    <div class="retailer-label">Choose where to buy</div>
+    <div class="retailer-option primary">
+      <div>
+        <div class="retailer-name">Bookshop.org</div>
+        <div class="retailer-sub">Adds all 3 to one cart, supports indie stores</div>
+      </div>
+      <span class="badge">Recommended</span>
+    </div>
+    <div class="retailer-option">
+      <div>
+        <div class="retailer-name">Amazon</div>
+        <div class="retailer-sub">Adds all 3 to one cart</div>
+      </div>
+    </div>
+    <div class="disclosure">Buying the path adds all three books to your cart at once — you can still remove any before checkout, or buy them individually above instead.</div>
+    <div class="modal-close" onclick="closePathModal()">Close</div>
+  </div>
+</div>
+
+<script>
+function openBookModal(title, author) {
+  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-author').textContent = author;
+  document.getElementById('book-modal').classList.add('open');
+}
+function closeBookModal() {
+  document.getElementById('book-modal').classList.remove('open');
+}
+function openPathModal() {
+  document.getElementById('path-modal').classList.add('open');
+}
+function closePathModal() {
+  document.getElementById('path-modal').classList.remove('open');
+}
+</script>
+
+</body>
+</html>

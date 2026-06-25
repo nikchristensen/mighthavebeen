@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>StellarLens — Guided paths</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #fafafa; color: #1a1a1a; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+  .nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #e5e5e5; margin-bottom: 28px; }
+  .logo { font-size: 20px; font-weight: 600; }
+  .logo span { color: #534AB7; }
+  .nav-links { display: flex; gap: 24px; font-size: 14px; color: #555; }
+  .nav-links a { color: inherit; text-decoration: none; }
+  .nav-links .current { color: #1a1a1a; font-weight: 600; }
+
+  .crumb { font-size: 13px; color: #888; margin-bottom: 16px; }
+  .crumb a { color: #534AB7; text-decoration: none; font-weight: 600; }
+  .crumb b { color: #1a1a1a; }
+
+  .hero { padding: 8px 0 28px; }
+  .hero h1 { font-size: 26px; font-weight: 600; margin-bottom: 8px; }
+  .hero p { font-size: 14px; color: #666; max-width: 560px; line-height: 1.5; }
+
+  .path-grid { display: flex; flex-direction: column; gap: 14px; margin-bottom: 40px; }
+  .path-row { display: flex; gap: 20px; border: 1px solid #e5e5e5; border-radius: 14px; overflow: hidden; background: white; cursor: pointer; transition: box-shadow 0.15s; }
+  .path-row:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.06); }
+  .path-row-art { width: 160px; flex-shrink: 0; height: 140px; overflow: hidden; }
+  .path-row-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .path-row-body { padding: 18px 20px 18px 0; flex: 1; }
+  .path-row-meta { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .path-row-title { font-size: 17px; font-weight: 600; margin-bottom: 6px; }
+  .path-row-hook { font-size: 13px; color: #666; line-height: 1.55; margin-bottom: 10px; }
+  .path-row-books { font-size: 12px; color: #aaa; }
+
+  .newsletter-inline { border: 1px solid #e5e5e5; border-radius: 14px; padding: 22px 24px; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); margin-bottom: 40px; }
+  .newsletter-inline h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .newsletter-inline p { font-size: 13px; color: #555; margin-bottom: 14px; max-width: 480px; line-height: 1.5; }
+  .newsletter-row { display: flex; gap: 10px; }
+  .newsletter-row input { flex: 1; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; }
+  .newsletter-row button { padding: 10px 18px; border: 1px solid #1a1a1a; border-radius: 8px; background: #1a1a1a; color: white; font-size: 14px; cursor: pointer; white-space: nowrap; }
+
+  footer { padding: 24px 0 16px; font-size: 12px; color: #999; border-top: 1px solid #e5e5e5; margin-top: 8px; }
+  .footer-newsletter { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; border-top: 1px solid #e5e5e5; margin-top: 20px; flex-wrap: wrap; gap: 12px; }
+  .footer-newsletter-text { font-size: 13px; color: #555; }
+  .footer-newsletter-text b { color: #1a1a1a; }
+  .footer-newsletter-form { display: flex; gap: 8px; }
+  .footer-newsletter-form input { padding: 8px 12px; border: 1px solid #ddd; border-radius: 7px; font-size: 13px; width: 200px; }
+  .footer-newsletter-form button { padding: 8px 14px; border: 1px solid #1a1a1a; border-radius: 7px; background: white; color: #1a1a1a; font-size: 13px; cursor: pointer; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="nav">
+    <a href="index.html" class="logo" style="text-decoration:none;color:inherit;">stellar<span>lens</span></a>
+    <div class="nav-links">
+      <a href="index.html">Browse</a>
+      <span class="current">Guided paths</span>
+      <a href="newsletter.html">Newsletter</a>
+      <span>About</span>
+    </div>
+  </div>
+
+  <div class="crumb"><a href="index.html">Browse</a> / <b>Guided paths</b></div>
+
+  <div class="hero">
+    <h1>Guided paths</h1>
+    <p>Three books, one theme, a deliberate order — short reading guides for when you'd rather follow a thought than browse a shelf. New paths added regularly.</p>
+  </div>
+
+  <div class="path-grid">
+
+    <div class="path-row" onclick="window.location.href='path-ai-hopeful.html'">
+      <div class="path-row-art"><img src="images/ai.jpg" alt="AI through a hopeful lens"></div>
+      <div class="path-row-body">
+        <div class="path-row-meta">AI & consciousness</div>
+        <div class="path-row-title">AI through a hopeful lens</div>
+        <div class="path-row-hook">Three books that imagine artificial minds as companions worth having, not threats worth fearing — starting gentle, ending with real stakes.</div>
+        <div class="path-row-books">3 books · easy → moderate</div>
+      </div>
+    </div>
+
+    <div class="path-row" onclick="window.location.href='#'">
+      <div class="path-row-art"><img src="images/power.jpg" alt="Power's quiet machinery"></div>
+      <div class="path-row-body">
+        <div class="path-row-meta">Power</div>
+        <div class="path-row-title">Power's quiet machinery</div>
+        <div class="path-row-hook">Not jackboots and checkpoints — the slower, more believable ways control gets normalized. A path for readers who found 1984 a little too obvious.</div>
+        <div class="path-row-books">3 books · moderate → demanding</div>
+      </div>
+    </div>
+
+    <div class="path-row" onclick="window.location.href='#'">
+      <div class="path-row-art"><img src="images/love.jpg" alt="Grief, disguised as sci-fi"></div>
+      <div class="path-row-body">
+        <div class="path-row-meta">Love</div>
+        <div class="path-row-title">Grief, disguised as sci-fi</div>
+        <div class="path-row-hook">Three books that use the genre's distance — alien planets, lost time, strange physics — to get closer to loss than realism usually allows.</div>
+        <div class="path-row-books">3 books · moderate → demanding</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="newsletter-inline">
+    <h3>One guided path a month, straight to your inbox</h3>
+    <p>No spam, no fifty-book listicles — just one carefully made path, plus the occasional note on what we're reading.</p>
+    <div class="newsletter-row">
+      <input type="email" placeholder="you@example.com">
+      <button>Subscribe</button>
+    </div>
+  </div>
+
+  <footer>StellarLens MVP wireframe — guided paths index, blog-style, with one inline newsletter placement.</footer>
+
+</div>
+</body>
+</html>
