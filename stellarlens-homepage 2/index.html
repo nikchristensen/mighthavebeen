@@ -20,6 +20,7 @@
   .search-row { display: flex; flex-direction: column; gap: 10px; }
   .search-row input { padding: 13px 16px; border: 1px solid #ddd; border-radius: 8px; font-size: 15px; }
   .search-row button { padding: 13px 22px; border: 1px solid #1a1a1a; border-radius: 8px; background: #1a1a1a; color: white; font-size: 15px; cursor: pointer; width: 100%; }
+  .example-hint { font-size: 12px; color: #999; margin-top: 8px; font-style: italic; transition: opacity 0.3s; }
   .section-label { font-size: 12px; font-weight: 600; color: #888; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 14px; }
   .filter-bar { position: relative; border: 1px solid #e5e5e5; border-radius: 12px; padding: 18px 20px; margin-bottom: 32px; background: white; overflow: hidden; }
   .filter-bar canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0.16; }
@@ -30,7 +31,8 @@
   .filter-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
   .pill-group { display: inline-flex; gap: 6px; padding: 6px; border-radius: 14px; background: #ececec; }
   .filter-row:last-child { margin-bottom: 0; }
-  .row-label { font-size: 12px; color: #999; width: 76px; flex-shrink: 0; }
+  .row-label { font-size: 12px; color: #777; font-weight: 600; width: 76px; flex-shrink: 0; }
+  .filter-bar-sub { font-size: 12px; color: #999; margin-bottom: 16px; }
   .pill { font-size: 13px; padding: 6px 13px; border-radius: 16px; border: 1px solid #ddd; background: white; cursor: pointer; white-space: nowrap; color: #555; }
   .pill:hover { border-color: #bbb; }
   .pill.active { border: 1.5px solid #534AB7; background: #EEEDFE; color: #3C3489; font-weight: 600; }
@@ -42,9 +44,15 @@
   .tile-art { height: 150px; overflow: hidden; background: #111; }
   .tile-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .tile-body { padding: 14px 16px; }
-  .tile-label { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .tile-label { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .tile-hook { font-size: 12px; color: #777; line-height: 1.45; margin-bottom: 8px; }
   .tile-count { font-size: 12px; color: #888; }
-  .teaser { display: flex; align-items: center; justify-content: space-between; border: 1px solid #e5e5e5; border-radius: 12px; padding: 18px 20px; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); margin-bottom: 40px; }
+  .teaser { display: flex; align-items: center; gap: 20px; border: 1px solid #e5e5e5; border-radius: 14px; padding: 22px 24px; background: linear-gradient(135deg, #f5f3ff, #fdf2f8); margin-bottom: 40px; }
+  .teaser-art { width: 90px; height: 90px; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+  .teaser-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .teaser-body { flex: 1; }
+  .teaser-eyebrow { font-size: 11px; font-weight: 600; color: #534AB7; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+  .teaser-title { font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
   .teaser-text { font-size: 14px; color: #444; }
   .teaser-text b { color: #1a1a1a; }
   .teaser-link { font-size: 14px; font-weight: 600; color: #534AB7; white-space: nowrap; margin-left: 16px; text-decoration: none; }
@@ -76,10 +84,11 @@
       <p>Browse by theme and filter to find just the right book, or describe what's keeping you up at night and we'll do the rest.</p>
     </div>
     <div class="hero-search">
-      <div class="search-row">
+      <div class="search-row" id="search-row">
         <input type="text" id="mind-input" placeholder="What's on your mind?">
         <button>Find a book</button>
       </div>
+      <div class="example-hint" id="example-hint">Try: "sci-fi about grief, but not something hopeless"</div>
     </div>
   </div>
 
@@ -90,6 +99,7 @@
       <div class="filter-bar-title">Filter by feel — no theme required</div>
       <div class="filter-clear" onclick="clearFilters()">Clear</div>
     </div>
+    <div class="filter-bar-sub">Start with mood, challenge, or era — even before you know the theme.</div>
     <div class="filter-row single-select">
       <div class="row-label">Challenge</div>
       <span class="pill-group"><div class="pill" data-group="challenge" onclick="toggle(this)">Easy read</div>
@@ -133,6 +143,7 @@
       <div class="tile-art"><img src="images/ai.jpg" alt="AI & consciousness"></div>
       <div class="tile-body">
         <div class="tile-label">AI & consciousness</div>
+        <div class="tile-hook">How might minds that aren't human think, feel, and act?</div>
         <div class="tile-count">24 works</div>
       </div>
     </div>
@@ -141,6 +152,7 @@
       <div class="tile-art"><img src="images/env.jpg" alt="Environment"></div>
       <div class="tile-body">
         <div class="tile-label">Environment</div>
+        <div class="tile-hook">Earth under pressure — collapse, grief, and what comes after.</div>
         <div class="tile-count">19 works</div>
       </div>
     </div>
@@ -149,6 +161,7 @@
       <div class="tile-art"><img src="images/love.jpg" alt="Love"></div>
       <div class="tile-body">
         <div class="tile-label">Love</div>
+        <div class="tile-hook">What survives across time, distance, and death.</div>
         <div class="tile-count">17 works</div>
       </div>
     </div>
@@ -157,6 +170,7 @@
       <div class="tile-art"><img src="images/power.jpg" alt="Power"></div>
       <div class="tile-body">
         <div class="tile-label">Power</div>
+        <div class="tile-hook">Who controls the story, and what resistance looks like.</div>
         <div class="tile-count">22 works</div>
       </div>
     </div>
@@ -165,6 +179,7 @@
       <div class="tile-art"><img src="images/utopias.jpg" alt="Utopias / dystopias"></div>
       <div class="tile-body">
         <div class="tile-label">Utopias / dystopias</div>
+        <div class="tile-hook">What would you trade for a better world?</div>
         <div class="tile-count">20 works</div>
       </div>
     </div>
@@ -173,6 +188,7 @@
       <div class="tile-art"><img src="images/empire.jpg" alt="Empire"></div>
       <div class="tile-body">
         <div class="tile-label">Empire</div>
+        <div class="tile-hook">Conquest, occupation, and what's left behind.</div>
         <div class="tile-count">15 works</div>
       </div>
     </div>
@@ -180,12 +196,17 @@
   </div>
 
   <div class="teaser">
-    <div class="teaser-text">Not sure where to start? <b>Try a guided path</b> — three books, one theme, a deliberate order.</div>
+    <div class="teaser-art"><img src="images/ai.jpg" alt="AI through a hopeful lens"></div>
+    <div class="teaser-body">
+      <div class="teaser-eyebrow">Featured guided path</div>
+      <div class="teaser-title">AI through a hopeful lens</div>
+      <div class="teaser-text">Three books, one theme, a deliberate order — for when you'd rather follow a thought than browse a shelf.</div>
+    </div>
     <a href="guided-paths.html" class="teaser-link">Explore guided paths →</a>
   </div>
 
   <div class="footer-newsletter">
-    <div class="footer-newsletter-text">Want new guided paths in your inbox? <b>Join the newsletter.</b></div>
+    <div class="footer-newsletter-text">One new guided path a month — for whatever's keeping you up at night. <b>Join the newsletter.</b></div>
     <div class="footer-newsletter-form">
       <input type="email" placeholder="you@example.com">
       <button>Subscribe</button>
@@ -335,6 +356,25 @@ if (document.readyState === 'complete') {
   window.addEventListener('load', initCanvas);
 }
 window.addEventListener('resize', () => { resize(); });
+const EXAMPLE_QUERIES = [
+  'sci-fi about grief, but not something hopeless',
+  'worried about AI taking my job',
+  'just went through a breakup',
+  'something that\'ll make me feel less alone',
+  'books that make power feel less abstract'
+];
+let exampleIndex = 0;
+function rotateExample() {
+  const el = document.getElementById('example-hint');
+  if (!el) return;
+  el.style.opacity = 0;
+  setTimeout(() => {
+    exampleIndex = (exampleIndex + 1) % EXAMPLE_QUERIES.length;
+    el.textContent = 'Try: "' + EXAMPLE_QUERIES[exampleIndex] + '"';
+    el.style.opacity = 1;
+  }, 300);
+}
+setInterval(rotateExample, 4000);
 </script>
 
 </body>
